@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>פאנל ניהול — מרכז המשחקים</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    @keyframes pinShake {
+      0%,100%{transform:translateX(0)}
+      20%{transform:translateX(-10px)}
+      40%{transform:translateX(10px)}
+      60%{transform:translateX(-8px)}
+      80%{transform:translateX(8px)}
+    }
+  </style>
+</head>
+<body class="admin-body">
+
+<!-- ── שכבת PIN ── -->
+<div id="pin-overlay" class="admin-pin-overlay">
+  <div class="admin-pin-box">
+    <div style="font-size:2.5em;margin-bottom:10px;">🔐</div>
+    <h2 style="margin:0 0 6px;color:#333;">פאנל ניהול</h2>
+    <p style="color:#888;margin:0 0 16px;font-size:0.9em;">הזן קוד PIN (ברירת מחדל: 1234)</p>
+    <div class="admin-pin-dots">
+      <div class="admin-pin-dot"></div>
+      <div class="admin-pin-dot"></div>
+      <div class="admin-pin-dot"></div>
+      <div class="admin-pin-dot"></div>
+    </div>
+    <p id="pin-error" style="color:#f44336;height:20px;font-size:0.85em;margin:4px 0;"></p>
+    <div class="admin-pin-keypad">
+      <button class="admin-pin-key" onclick="addPinDigit('1')">1</button>
+      <button class="admin-pin-key" onclick="addPinDigit('2')">2</button>
+      <button class="admin-pin-key" onclick="addPinDigit('3')">3</button>
+      <button class="admin-pin-key" onclick="addPinDigit('4')">4</button>
+      <button class="admin-pin-key" onclick="addPinDigit('5')">5</button>
+      <button class="admin-pin-key" onclick="addPinDigit('6')">6</button>
+      <button class="admin-pin-key" onclick="addPinDigit('7')">7</button>
+      <button class="admin-pin-key" onclick="addPinDigit('8')">8</button>
+      <button class="admin-pin-key" onclick="addPinDigit('9')">9</button>
+      <button class="admin-pin-key" onclick="clearPin()" style="font-size:0.8em;color:#f44336;">מחק</button>
+      <button class="admin-pin-key" onclick="addPinDigit('0')">0</button>
+      <button class="admin-pin-key" onclick="checkPin()" style="background:#667eea;color:#fff;border-color:#667eea;">✓</button>
+    </div>
+    <button onclick="window.location.href='index.html'" style="margin-top:18px;background:none;border:none;color:#888;cursor:pointer;font-family:'Rubik',sans-serif;font-size:0.9em;">← חזור למשחק</button>
+  </div>
+</div>
+
+<!-- ── גוף פאנל הניהול ── -->
+<div style="max-width:900px;margin:0 auto;">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px;">
+    <div>
+      <h1 style="margin:0;color:#fff;font-size:clamp(22px,4vw,32px);">🎮 פאנל ניהול</h1>
+      <p style="margin:4px 0 0;color:rgba(255,255,255,0.75);font-size:0.9em;">מרכז המשחקים לילדים</p>
+    </div>
+    <a href="index.html" style="background:rgba(255,255,255,0.2);color:#fff;padding:10px 20px;border-radius:14px;text-decoration:none;font-weight:bold;font-size:0.9em;border:2px solid rgba(255,255,255,0.3);">← חזור למשחק</a>
+  </div>
+
+  <!-- טאבים -->
+  <div class="admin-section-tabs">
+    <button class="admin-tab active" data-tab="players"  onclick="switchTab('players')">👤 שחקנים</button>
+    <button class="admin-tab" data-tab="messages" onclick="switchTab('messages')">💬 הודעות</button>
+    <button class="admin-tab" data-tab="games"    onclick="switchTab('games')">🎮 תוכן משחקים</button>
+    <button class="admin-tab" data-tab="progress" onclick="switchTab('progress')">⭐ התקדמות</button>
+    <button class="admin-tab" data-tab="security" onclick="switchTab('security')">🔐 אבטחה</button>
+  </div>
+
+  <!-- ── טאב: שחקנים ── -->
+  <div id="tab-players" class="admin-tab-content active">
+    <div class="admin-card">
+      <h3>שמות שחקנים</h3>
+      <label style="display:block;font-weight:bold;margin-bottom:6px;color:#555;">שם הבן 👦</label>
+      <input id="input-boy-name" class="admin-input" type="text" placeholder="רועי" value="רועי">
+      <label style="display:block;font-weight:bold;margin-bottom:6px;color:#555;">שם הבת 👧</label>
+      <input id="input-girl-name" class="admin-input" type="text" placeholder="מיה" value="מיה">
+    </div>
+    <div class="admin-card">
+      <h3>הגדרות האפליקציה</h3>
+      <label style="display:block;font-weight:bold;margin-bottom:6px;color:#555;">כותרת האפליקציה</label>
+      <input id="input-app-title" class="admin-input" type="text" placeholder="מרכז המשחקים">
+      <label style="display:flex;align-items:center;gap:10px;cursor:pointer;margin-top:10px;">
+        <input id="input-audio" type="checkbox" checked style="width:20px;height:20px;accent-color:#667eea;">
+        <span style="font-weight:bold;color:#555;">אודיו מופעל 🔊</span>
+      </label>
+    </div>
+    <button class="admin-btn primary" onclick="savePlayers()" style="width:100%;padding:14px;">💾 שמור שינויים</button>
+  </div>
+
+  <!-- ── טאב: הודעות ── -->
+  <div id="tab-messages" class="admin-tab-content">
+    <div class="admin-card">
+      <h3>הודעות הצלחה לבן 👦</h3>
+      <label style="display:block;font-weight:bold;margin-bottom:4px;color:#555;">הודעות רגילות (שורה לכל הודעה)</label>
+      <textarea id="msg-boy-reg" class="admin-input" placeholder="קול הכבוד, אתה אלוף&#10;עבודה מדהימה&#10;איזה יופי!"></textarea>
+      <label style="display:block;font-weight:bold;margin:8px 0 4px;color:#555;">הודעות כפארה</label>
+      <textarea id="msg-boy-kapara" class="admin-input" style="min-height:80px;" placeholder="מעולה, כפארה עליך&#10;קול הכבוד, כפארה עליך"></textarea>
+      <label style="display:block;font-weight:bold;margin:8px 0 4px;color:#555;">הודעות סיום (סוף רמה)</label>
+      <textarea id="msg-boy-life" class="admin-input" style="min-height:80px;" placeholder="אתה החיים שלי!&#10;קול הכבוד, אתה החיים שלי"></textarea>
+    </div>
+    <div class="admin-card">
+      <h3>הודעות הצלחה לבת 👧</h3>
+      <label style="display:block;font-weight:bold;margin-bottom:4px;color:#555;">הודעות רגילות</label>
+      <textarea id="msg-girl-reg" class="admin-input" placeholder="קול הכבוד, את אלופה&#10;עבודה מדהימה&#10;איזה יופי!"></textarea>
+      <label style="display:block;font-weight:bold;margin:8px 0 4px;color:#555;">הודעות כפארה</label>
+      <textarea id="msg-girl-kapara" class="admin-input" style="min-height:80px;" placeholder="מעולה, כפארה עלייך"></textarea>
+      <label style="display:block;font-weight:bold;margin:8px 0 4px;color:#555;">הודעות סיום</label>
+      <textarea id="msg-girl-life" class="admin-input" style="min-height:80px;" placeholder="את החיים שלי!"></textarea>
+    </div>
+    <button class="admin-btn primary" onclick="saveMessages()" style="width:100%;padding:14px;">💾 שמור הודעות</button>
+  </div>
+
+  <!-- ── טאב: תוכן משחקים ── -->
+  <div id="tab-games" class="admin-tab-content">
+    <div class="admin-card">
+      <h3>בחר משחק לעריכה</h3>
+      <p style="color:#888;font-size:0.9em;margin:0 0 14px;">לחץ על משחק כדי לערוך את התוכן שלו (שאלות, אמוג'י, זוגות וכו')</p>
+      <div id="games-list" class="admin-game-list"></div>
+    </div>
+    <div id="game-editor-area" style="display:none;">
+      <input type="hidden" id="current-game-id">
+      <div class="admin-card">
+        <h3 id="game-editor-title">עריכת משחק</h3>
+        <p style="color:#888;font-size:0.85em;margin:0 0 10px;">עריכה ב-JSON. כל שינוי ייכנס לתוקף בפעם הבאה שהאפליקציה תיטען.</p>
+        <textarea id="game-content-editor" class="admin-input" style="min-height:300px;font-family:monospace;font-size:13px;direction:ltr;text-align:left;"></textarea>
+        <div style="display:flex;gap:10px;margin-top:12px;flex-wrap:wrap;">
+          <button class="admin-btn primary" onclick="saveGameContent_admin()">💾 שמור תוכן</button>
+          <button class="admin-btn danger"  onclick="resetGameContent_admin()">↩️ אפס לברירת מחדל</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── טאב: התקדמות ── -->
+  <div id="tab-progress" class="admin-tab-content">
+    <div id="progress-content">
+      <p style="color:rgba(255,255,255,0.7);text-align:center;padding:20px;">לחץ על הטאב כדי לטעון</p>
+    </div>
+  </div>
+
+  <!-- ── טאב: אבטחה ── -->
+  <div id="tab-security" class="admin-tab-content">
+    <div class="admin-card">
+      <h3>שינוי PIN</h3>
+      <label style="display:block;font-weight:bold;margin-bottom:6px;color:#555;">PIN נוכחי</label>
+      <input id="input-pin-current" class="admin-input" type="password" maxlength="4" placeholder="1234">
+      <label style="display:block;font-weight:bold;margin-bottom:6px;color:#555;">PIN חדש (4 ספרות)</label>
+      <input id="input-pin-new" class="admin-input" type="password" maxlength="4" placeholder="הכנס 4 ספרות">
+      <label style="display:block;font-weight:bold;margin-bottom:6px;color:#555;">אישור PIN חדש</label>
+      <input id="input-pin-confirm" class="admin-input" type="password" maxlength="4" placeholder="חזור על ה-PIN">
+      <button class="admin-btn primary" onclick="savePin()" style="margin-top:10px;">🔐 שמור PIN חדש</button>
+    </div>
+    <div class="admin-card" style="background:#fff8e1;border:2px solid #ffd54f;">
+      <h3 style="color:#f57f17;">💡 כיצד להיכנס לפאנל הניהול</h3>
+      <ul style="color:#555;line-height:2;">
+        <li>גש ישירות ל: <strong>admin.html</strong></li>
+        <li>לחץ לחיצה ממושכת (3 שניות) על שם השחקן בדף הראשי</li>
+        <li>לחץ 5 פעמים על אייקון הארנק בדף הראשי</li>
+      </ul>
+    </div>
+  </div>
+
+</div><!-- end max-width -->
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/dist/umd/supabase.js"></script>
+<script src="js/config.js"></script>
+<script src="js/data.js"></script>
+<script src="js/admin.js"></script>
+<script>
+  // DEFAULT_DATA זמין אחרי טעינת data.js
+  window.DEFAULT_DATA = DEFAULT_DATA;
+</script>
+</body>
+</html>

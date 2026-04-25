@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="משחקים">
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icon-192.png">
+  <title>מרכז המשחקים</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="bg-hub">
+
+<div id="bg-animations"></div>
+<button id="fullscreen-btn" class="sys-btn" onclick="toggleFullScreen()">⤢ מסך מלא</button>
+
+<!-- ── מסך התחלה ── -->
+<div id="start-screen" style="display:flex;flex-direction:column;align-items:center;">
+  <div style="font-size:clamp(80px,20vw,150px);margin-top:10vh;animation:superPop 1s ease-out forwards;">🚀</div>
+  <h1 id="app-main-title" style="font-size:clamp(38px,8vw,68px);">מרכז המשחקים!</h1>
+  <div id="loader-wrapper"><div id="loader-bar"></div></div>
+  <div id="loader-text">מכין את המשחקים...</div>
+  <button id="start-btn" class="action-btn dimmed" disabled onclick="openGenderScreen()">התחלה!</button>
+</div>
+
+<!-- ── מסך מגדר ── -->
+<div id="gender-screen" class="hidden" style="display:flex;flex-direction:column;align-items:center;">
+  <h1 style="margin-top:10vh;">מי משחק/ת?</h1>
+  <div class="grid-container" style="gap:5vmin;margin-top:5vmin;">
+    <div class="grid-card gender-boy" onclick="setGender('boy')" style="width:clamp(120px,25vw,200px);">
+      <div style="font-size:clamp(60px,12vw,100px);">👦</div><h2>בן</h2>
+    </div>
+    <div class="grid-card gender-girl" onclick="setGender('girl')" style="width:clamp(120px,25vw,200px);">
+      <div style="font-size:clamp(60px,12vw,100px);">👧</div><h2>בת</h2>
+    </div>
+  </div>
+</div>
+
+<!-- ── מסך Hub ── -->
+<div id="hub-screen" class="hidden">
+  <h1 style="margin-top:3vh;cursor:default;" id="hub-header">המרכז של רועי</h1>
+  <div id="star-wallet-container">
+    <div id="star-wallet-purse" style="position:relative;width:clamp(65px,14vw,100px);height:clamp(50px,11vw,80px);">
+      <svg viewBox="0 0 110 90" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+        <defs><linearGradient id="wg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#c0873b"/><stop offset="50%" stop-color="#8B5E3C"/><stop offset="100%" stop-color="#6B3F1F"/></linearGradient></defs>
+        <rect x="5" y="22" width="100" height="60" rx="12" fill="url(#wg)" stroke="#5a3311" stroke-width="2"/>
+        <path d="M5,42 Q5,18 30,15 L80,15 Q105,18 105,42" fill="#a0714a" stroke="#5a3311" stroke-width="2"/>
+        <circle cx="55" cy="42" r="8" fill="#ffd166" stroke="#c5981a" stroke-width="2"/>
+        <circle cx="55" cy="42" r="4" fill="#ffe599"/>
+        <line x1="12" y1="70" x2="98" y2="70" stroke="#5a3311" stroke-width="1" stroke-dasharray="4,3" opacity="0.5"/>
+      </svg>
+    </div>
+    <div id="star-wallet-display">
+      <div style="font-size:clamp(16px,3vw,24px);">—</div>
+      <div style="font-size:clamp(14px,2.8vw,22px);font-weight:900;">0 ⭐</div>
+    </div>
+  </div>
+  <div class="hub-subtitle">בחר משחק להתחיל</div>
+  <div id="hub-container" class="hub-container"></div>
+</div>
+
+<!-- ── מסך שפת אות חסרה ── -->
+<div id="missing-lang-screen" class="hidden" style="display:flex;flex-direction:column;align-items:center;">
+  <div class="top-bar" style="align-self:stretch;">
+    <button class="exit-btn" onclick="backToHub()">➜ חזור</button>
+    <div style="width:60px;"></div>
+  </div>
+  <h1 style="margin-top:8vh;">באיזו שפה נשחק?</h1>
+  <div class="grid-container" style="gap:5vmin;margin-top:5vmin;">
+    <div class="grid-card" onclick="startMissingGame('he')" style="width:clamp(120px,25vw,200px);border-color:#2196F3;">
+      <div style="font-size:clamp(38px,7vw,72px);font-weight:bold;color:#2196F3;">אבג</div><h2>עברית</h2>
+    </div>
+    <div class="grid-card" onclick="startMissingGame('en')" style="width:clamp(120px,25vw,200px);border-color:#F44336;">
+      <div style="font-size:clamp(38px,7vw,72px);font-weight:bold;color:#F44336;">ABC</div><h2>English</h2>
+    </div>
+  </div>
+</div>
+
+<!-- ── מסך בחירת רמה ── -->
+<div id="unified-diff-screen" class="hidden">
+  <div class="top-bar"><button class="exit-btn" onclick="backToHub()">➜ חזור</button><h2 id="unified-diff-title"></h2><div style="width:60px;"></div></div>
+  <h3 id="adaptive-msg" style="color:#e91e63;margin-top:16px;display:none;">התאמנו את הרמה בשבילך!</h3>
+  <div class="grid-container">
+    <div class="grid-card level-card" onclick="startGameEngine(1)"><div class="grid-card-icon">🟢</div><div class="grid-card-name">רמה 1 (קל)</div></div>
+    <div class="grid-card level-card" onclick="startGameEngine(2)"><div class="grid-card-icon">🟡</div><div class="grid-card-name">רמה 2 (בינוני)</div></div>
+    <div class="grid-card level-card" onclick="startGameEngine(3)"><div class="grid-card-icon">🔴</div><div class="grid-card-name">רמה 3 (קשה)</div></div>
+    <div class="grid-card level-card level-card-adv" id="lvl-4-btn" onclick="startGameEngine(4)" style="display:none;border-color:#FF9800;"><div class="grid-card-icon">🟠</div><div class="grid-card-name">רמה 4 (מומחה)</div></div>
+    <div class="grid-card level-card level-card-adv" id="lvl-5-btn" onclick="startGameEngine(5)" style="display:none;border-color:#E91E63;"><div class="grid-card-icon">🟣</div><div class="grid-card-name">רמה 5 (גאון)</div></div>
+  </div>
+</div>
+
+<!-- ── מסך משחק פעיל ── -->
+<div id="active-game-container" class="hidden">
+  <div class="top-bar">
+    <button class="exit-btn" onclick="quitActiveGame()">➜ יציאה</button>
+    <div id="active-progress-container" class="progress-container"></div>
+  </div>
+  <h2 id="active-game-title" style="margin-bottom:16px;"></h2>
+  <div id="game-workspace"></div>
+</div>
+
+<!-- ── מסך סיום רמה ── -->
+<div id="level-complete-overlay" class="hidden">
+  <div class="modal-box">
+    <h2 id="win-header">כל הכבוד! 🏆</h2>
+    <div class="stars-container">
+      <div class="star" id="star-1">★</div>
+      <div class="star" id="star-2">★</div>
+      <div class="star" id="star-3">★</div>
+      <div class="star" id="star-4">★</div>
+    </div>
+    <button class="action-btn" onclick="closeLevelComplete()">המשך לשחק</button>
+  </div>
+</div>
+
+<!-- ── שכבת פידבק ── -->
+<div id="feedback-layer" class="hidden feedback-icon"></div>
+
+<!-- ── ספריות ── -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/dist/umd/supabase.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+<!-- ── קבצי האפליקציה (סדר חשוב!) ── -->
+<script src="js/config.js"></script>
+<script src="js/audio.js"></script>
+<script src="js/supabase-api.js"></script>
+<script src="js/data.js"></script>
+<script src="js/engine.js"></script>
+<script src="js/games.js"></script>
+<script src="js/app.js"></script>
+
+</body>
+</html>
