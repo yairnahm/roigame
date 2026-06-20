@@ -242,6 +242,13 @@ function buildHubCards() {
         { id:'cop',      icon:'🚓', title:'שוטר וגנב',       star:'',  fn:`openDifficultyScreen('cop','🚓','שוטר וגנב')` },
       ]
     },
+    {
+      id: 'social',
+      label: '🤝 כישורים חברתיים',
+      games: [
+        { id:'sharing', icon:'🤝', title:'לחלוק ולהצליח', star:'⭐', fn:`openDifficultyScreen('sharing','🤝','לחלוק ולהצליח')` },
+      ]
+    },
   ];
 
   const container = document.getElementById('hub-container');

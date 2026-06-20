@@ -23,8 +23,9 @@ const BG_ICONS = {
   bigger:   ['⚖️','🐘','🐭'],  emotion:  ['😄','😢','😡','😱'],
   habitat:  ['🏠','🌳','🌊'],  shadow:   ['👤','🌑','👀'],
   halfhalf: ['✂️','🎨','🧩'],  chrono:   ['⏳','📅','🔄'],
+  sharing:  ['🤝','❤️','🌟','🎁'],
 };
 
 // משחקים שנותנים כוכב מלא / חצי כוכב
-const FULL_STAR_GAMES = ['sequence','memory','missing','diff','chrono'];
+const FULL_STAR_GAMES = ['sequence','memory','missing','diff','chrono','sharing'];
 const HALF_STAR_GAMES = ['context','oddone','halfhalf','counting'];

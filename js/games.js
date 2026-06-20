@@ -663,4 +663,114 @@ const GAME_INIT_MAP = {
   shadow:   initShadowGame,
   halfhalf: initHalfHalfGame,
   chrono:   initChronoGame,
+  sharing:  initSharingGame,
 };
+
+// ── 19. לחלוק ולהצליח ──────────────────────────────
+function initSharingGame() {
+  const SCENES = [
+    {
+      question: 'רועי ונועם רוצים לשחק עם המשאית האדומה, אבל יש רק אחת. מה יעשה רועי?',
+      situation: 'images/sharing/03_scene1_truck_basic.webp',
+      badImg:    'images/sharing/04_scene1_truck_bad_choice.webp',
+      goodImg:   'images/sharing/05_scene1_truck_good_choice.webp',
+      wrongBtn:  '😤 לקחת את המשאית לבד',
+      rightBtn:  '🤝 לשתף עם נועם',
+      badText:   '😢 כשלא משתפים — חברים עצובים...',
+      goodText:  '🌟 כשמחלקים — כולם שמחים!',
+    },
+    {
+      question: 'רועי משחק בטאבלט. נועם רוצה גם לשחק. מה יעשה רועי?',
+      situation: 'images/sharing/06_scene2_tablet_basic.webp',
+      badImg:    'images/sharing/07_scene2_tablet_bad_choice.webp',
+      goodImg:   'images/sharing/08_scene2_tablet_good_choice.webp',
+      wrongBtn:  '😤 להגיד לנועם "לא!"',
+      rightBtn:  '🔄 לשחק בתורות',
+      badText:   '😢 להגיד "לא" — זה לא יפה...',
+      goodText:  '🌟 תור תור — ידידות אמת!',
+    },
+    {
+      question: 'נשארה עוגייה אחת. גם רועי וגם נועם רוצים אותה. מה יעשה רועי?',
+      situation: 'images/sharing/09_scene3_cookie_basic.webp',
+      badImg:    'images/sharing/10_scene3_cookie_bad_choice.webp',
+      goodImg:   'images/sharing/11_scene3_cookie_good_choice.webp',
+      wrongBtn:  '😤 לאכול את כל העוגייה',
+      rightBtn:  '🍪 לחלק לשניים',
+      badText:   '😢 לקחת הכל — נועם עצוב...',
+      goodText:  '🌟 לחצות ולשתף — שניהם שמחים!',
+    },
+    {
+      question: 'רועי רוצה לרדת בגלשן, אבל ילדים אחרים מחכים בתור. מה יעשה רועי?',
+      situation: 'images/sharing/12_scene4_playground_basic.webp',
+      badImg:    'images/sharing/13_scene4_playground_bad_choice.webp',
+      goodImg:   'images/sharing/14_scene4_playground_good_choice.webp',
+      wrongBtn:  '😤 לדחוף ולקפוץ לפני כולם',
+      rightBtn:  '⏳ לחכות בסבלנות בתור',
+      badText:   '😢 לדחוף — זה פוגע בחברים...',
+      goodText:  '🌟 לחכות בתור — כולם שווים!',
+    },
+    {
+      question: 'רועי ונועם בונים מגדל אבל יש מעט לבנים. מה יעשה רועי?',
+      situation: 'images/sharing/15_scene5_blocks_basic.webp',
+      badImg:    'images/sharing/16_scene5_blocks_bad_choice.webp',
+      goodImg:   'images/sharing/17_scene5_blocks_good_choice.webp',
+      wrongBtn:  '😤 לקחת את כל הלבנים',
+      rightBtn:  '🏗️ לבנות יחד',
+      badText:   '😢 לקחת הכל — אי אפשר לבנות יחד...',
+      goodText:  '🌟 לבנות ביחד — המגדל יוצא גבוה יותר!',
+    },
+  ];
+
+  const sceneCounts = { 1: 2, 2: 3, 3: 5 };
+  const count = sceneCounts[currentDifficulty] || 5;
+  const scenes = SCENES.slice(0, count);
+  totalSteps = scenes.length;
+
+  W('active-game-title').textContent = 'לחלוק ולהצליח 🤝';
+  buildProgressDots(totalSteps);
+
+  function showScene(idx) {
+    if (idx >= scenes.length) return;
+    const scene = scenes[idx];
+    const ws = W('game-workspace');
+    ws.innerHTML = `
+      <div class="sharing-scene">
+        <img id="sharing-img" class="sharing-img" src="${scene.situation}" alt="">
+        <p class="sharing-question">${scene.question}</p>
+        <div id="sharing-feedback-text" class="sharing-feedback hidden"></div>
+        <div class="sharing-choices" id="sharing-choices">
+          <button class="sharing-btn sharing-wrong" id="sharing-btn-wrong">${scene.wrongBtn}</button>
+          <button class="sharing-btn sharing-right" id="sharing-btn-right">${scene.rightBtn}</button>
+        </div>
+      </div>`;
+
+    function onChoice(isCorrect) {
+      if (isProcessing) return;
+      const img = W('sharing-img');
+      const fb  = W('sharing-feedback-text');
+      const choicesDiv = W('sharing-choices');
+      choicesDiv.querySelectorAll('button').forEach(b => b.disabled = true);
+
+      if (isCorrect) {
+        img.src = scene.goodImg;
+        fb.textContent = scene.goodText;
+        fb.className = 'sharing-feedback sharing-good';
+        handleAnswer(true, null, () => showScene(currentStep), null);
+      } else {
+        img.src = scene.badImg;
+        fb.textContent = scene.badText;
+        fb.className = 'sharing-feedback sharing-bad';
+        handleAnswer(false, null, null, () => {
+          img.src = scene.situation;
+          fb.className = 'sharing-feedback hidden';
+          choicesDiv.querySelectorAll('button').forEach(b => b.disabled = false);
+        });
+      }
+    }
+
+    W('sharing-btn-wrong').onclick = () => onChoice(false);
+    W('sharing-btn-right').onclick = () => onChoice(true);
+  }
+
+  showScene(0);
+}
