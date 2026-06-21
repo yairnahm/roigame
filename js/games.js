@@ -739,8 +739,14 @@ function initSharingGame() {
         <p class="sharing-question">${scene.question}</p>
         <div id="sharing-feedback-text" class="sharing-feedback hidden"></div>
         <div class="sharing-choices" id="sharing-choices">
-          <button class="sharing-btn sharing-wrong" id="sharing-btn-wrong">${scene.wrongBtn}</button>
-          <button class="sharing-btn sharing-right" id="sharing-btn-right">${scene.rightBtn}</button>
+          <button class="sharing-choice-btn btn-wrong" id="sharing-btn-wrong">
+            <img src="${scene.badImg}" class="sharing-choice-thumb" alt="">
+            <span class="sharing-choice-text">${scene.wrongBtn}</span>
+          </button>
+          <button class="sharing-choice-btn btn-right" id="sharing-btn-right">
+            <img src="${scene.goodImg}" class="sharing-choice-thumb" alt="">
+            <span class="sharing-choice-text">${scene.rightBtn}</span>
+          </button>
         </div>
       </div>`;
 
