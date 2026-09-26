@@ -440,7 +440,7 @@ function loadVPartsRound() {
   const imgs = GAME_DATA.vparts.images;
   const p = imgs[vpOrder[currentStep]];
   W('vp-target').innerHTML = `<div style="position:relative;width:100%;height:100%;">
-    <img src="${p.img}" style="width:100%;height:100%;object-fit:cover;">
+    <img src="${p.img}" alt="תמונת רכב" style="width:100%;height:100%;object-fit:cover;">
     <div class="vp-patch" style="width:${p.cw}%;height:${p.ch}%;left:${p.cx - p.cw/2}%;top:${p.cy - p.ch/2}%;">❓</div></div>`;
   W('vp-target').style.borderColor = '#2196F3';
   const others = imgs.filter(img => img !== p);
@@ -455,7 +455,7 @@ function loadVPartsRound() {
     btn.innerHTML = `<div class="vp-option-inner" style="width:100%;height:100%;background-image:url('${o.img}');background-size:${bsx}% ${bsy}%;background-position:${px}% ${py}%;"></div>`;
     btn.onclick = () => {
       if (isProcessing) return;
-      if (o === p) { W('vp-target').innerHTML = `<img src="${p.img}" style="width:100%;height:100%;object-fit:cover;animation:superPop 0.5s ease-out forwards;">`; W('vp-target').style.borderColor = '#4CAF50'; }
+      if (o === p) { W('vp-target').innerHTML = `<img src="${p.img}" alt="תמונת רכב" style="width:100%;height:100%;object-fit:cover;animation:superPop 0.5s ease-out forwards;">`; W('vp-target').style.borderColor = '#4CAF50'; }
       handleAnswer(o === p, btn, loadVPartsRound, null);
     };
     const n = D.createElement('div'); n.className = 'option-number'; n.textContent = i + 1;
@@ -507,7 +507,7 @@ function loadEmotionRound() {
   const imgs = GAME_DATA.emotion.images;
   const p = imgs[emotionOrder[currentStep]];
   const url = `https://tse1.mm.bing.net/th?q=${encodeURIComponent(p.q)}&w=600&h=400&c=7&rs=1`;
-  W('emo-img').innerHTML = `<img src="${url}" style="width:100%;height:100%;object-fit:cover;animation:popIn 0.5s;">`;
+  W('emo-img').innerHTML = `<img src="${url}" alt="תמונת ילד/ה" style="width:100%;height:100%;object-fit:cover;animation:popIn 0.5s;">`;
   const oArea = W('emo-opts'); oArea.innerHTML = '';
   GAME_DATA.emotion.labels.forEach(lbl => {
     const btn = D.createElement('button'); btn.className = 'option-btn';

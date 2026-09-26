@@ -1,4 +1,4 @@
-const CACHE = 'roigame-v1';
+const CACHE = 'roigame-v2';
 const ASSETS = [
   '/', '/index.html', '/admin.html',
   '/css/style.css',
